@@ -24,6 +24,13 @@ SOFTWARE.
 
 ### Disclaimer
 
-This project includes configuration files and references to third-party software, specifically RabbitMQ, Prometheus, and Grafana, each of which is licensed under their respective licenses. Users must ensure compliance with these licenses when using this software. Additionally, the `rabbitmq-dashboard.json` file is derived from [grafana](https://grafana.com/grafana/dashboards/10991-rabbitmq-overview/), which may be subject to different licensing terms.
+This project includes configuration files and references to third-party software, 
+specifically RabbitMQ, Prometheus, and Grafana, each of which is licensed under 
+their respective licenses. Users must ensure compliance with these licenses when 
+using this software. Additionally, the `rabbitmq-dashboard.json` file is derived 
+from [grafana](https://grafana.com/grafana/dashboards/10991-rabbitmq-overview/), 
+which may be subject to different licensing terms.
 
-The MIT License applies only to the original content of this repository, including the configuration, provisioning files, and documentation created specifically for this project.
+The MIT License applies only to the original content of this repository, including 
+the configuration, provisioning files, and documentation created specifically for 
+this project.
