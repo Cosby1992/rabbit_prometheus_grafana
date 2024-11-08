@@ -52,6 +52,16 @@ services:
       timeout: 10s
       retries: 3
 
+  example:
+    image: example:1.0.0
+    build: 
+      context: ./example
+      dockerfile: Dockerfile
+    environment:
+      RABBITMQ_URI: ${RABBITMQ_URI}
+    networks:
+      - monitoring_network
+
 networks:
   monitoring_network:
     driver: bridge
