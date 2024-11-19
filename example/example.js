@@ -87,9 +87,10 @@ const start = async () => {
   }
 
   console.log("Closing connections");
-  channel.close();
-  consumerChannel.close();
-  connection.close();
+  await channel.close();
+  await consumerChannel.close();
+  await connection.close();
+  await consumerConnection.close();
 
   console.log("Example project stopped");
 };
