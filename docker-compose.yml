@@ -12,6 +12,11 @@ services:
       - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro  # Definitions file
     networks:
       - monitoring_network
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   prometheus:
     image: prom/prometheus:v2.53.3
@@ -57,8 +62,12 @@ services:
     build: 
       context: ./example
       dockerfile: Dockerfile
+    container_name: example
     environment:
       RABBITMQ_URI: ${RABBITMQ_URI}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - monitoring_network
 
