@@ -34,35 +34,36 @@ const start = async () => {
     connection.close();
   });
 
-  channel.assertQueue(queues.direct1.name, { durable: true });
-  channel.assertQueue(queues.direct2.name, { durable: true });
-  channel.assertQueue(queues.fanout1.name, { durable: true });
-  channel.assertQueue(queues.fanout2.name, { durable: true });
-  channel.assertQueue(queues.fanout3.name, { durable: true });
+  await channel.assertQueue(queues.direct1.name, { durable: true });
+  await channel.assertQueue(queues.direct2.name, { durable: true });
+  await channel.assertQueue(queues.fanout1.name, { durable: true });
+  await channel.assertQueue(queues.fanout2.name, { durable: true });
+  await channel.assertQueue(queues.fanout3.name, { durable: true });
 
-  channel.assertExchange(exchanges.direct, "direct", { durable: true });
-  channel.assertExchange(exchanges.fanout, "fanout", { durable: true });
+  await channel.assertExchange(exchanges.direct, "direct", { durable: true });
+  await channel.assertExchange(exchanges.fanout, "fanout", { durable: true });
 
   // Bind queues to the direct exchange
-  channel.bindQueue(
+  await channel.bindQueue(
     queues.direct1.name,
     exchanges.direct,
     queues.direct1.routingKey
   );
-  channel.bindQueue(
+  await channel.bindQueue(
     queues.direct2.name,
     exchanges.direct,
     queues.direct2.routingKey
   );
 
   // Bind queues to the fanout exchange
-  channel.bindQueue(queues.fanout1.name, exchanges.fanout, "");
-  channel.bindQueue(queues.fanout2.name, exchanges.fanout, "");
-  channel.bindQueue(queues.fanout3.name, exchanges.fanout, "");
+  await channel.bindQueue(queues.fanout1.name, exchanges.fanout, "");
+  await channel.bindQueue(queues.fanout2.name, exchanges.fanout, "");
+  await channel.bindQueue(queues.fanout3.name, exchanges.fanout, "");
 
   console.log("Registering consumers");
-  // Consumer gets own channel
-  const consumerChannel = await connection.createChannel();
+  // Consumer gets own connection and channel
+  const consumerConnection = await amqp.connect(process.env.RABBITMQ_URI);
+  const consumerChannel = await consumerConnection.createChannel();
   await registerConsumers(consumerChannel);
 
   for (let iteration = 0; iteration < settings.demoIterations; iteration++) {
@@ -114,10 +115,9 @@ const registerConsumers = async (channel) => {
       channel.consume(
         queue.name,
         async (msg) => {
-          if (msg !== null) {
+          if (msg == null) return;
             await new Promise((resolve) => setTimeout(resolve, 20));
             channel.ack(msg);
-          }
         },
         { noAck: false }
       );
